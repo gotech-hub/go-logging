@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"sync"
 
-	"github.com/gotech-hub/go-common/utils"
+	utils "github.com/gotech-hub/go-common"
 
 	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog"

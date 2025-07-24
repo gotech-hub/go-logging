@@ -7,7 +7,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/gotech-hub/go-common/utils"
+	utils "github.com/gotech-hub/go-common"
 
 	"github.com/rs/zerolog"
 )
