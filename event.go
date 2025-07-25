@@ -340,7 +340,7 @@ func (e *Event) MACAddr(key string, ha net.HardwareAddr) *Event {
 }
 
 func (e *Event) StrEncrypt(key, val string) *Event {
-	if encr, err := Encrypt(val); err == nil {
+	if encr, err := EncryptLog(val); err == nil {
 		e.event.Str(key, encr)
 	} else {
 		e.event.Str(key, val)
