@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "dev", "stg", "prd"]
+  pull_request:
+
+# This service depends on private github.com/gotech-hub/* modules. CI needs a
+# token with read access to those repos, stored as the GOTECH_CI_TOKEN secret
+# (a PAT or a fine-grained token). GOPRIVATE keeps the modules off the public
+# proxy/sumdb.
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    env:
+      GOPRIVATE: github.com/gotech-hub
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.23"
+          cache: true
+      - name: Configure private module access
+        run: |
+          git config --global url."https://x-access-token:${{ secrets.GOTECH_CI_TOKEN }}@github.com/".insteadOf "https://github.com/"
+      - run: go vet ./...
+      - run: go test -short -race ./...
+      - run: go build ./...
+
+  lint:
+    runs-on: ubuntu-latest
+    env:
+      GOPRIVATE: github.com/gotech-hub
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.23"
+      - name: Configure private module access
+        run: |
+          git config --global url."https://x-access-token:${{ secrets.GOTECH_CI_TOKEN }}@github.com/".insteadOf "https://github.com/"
+      - uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
